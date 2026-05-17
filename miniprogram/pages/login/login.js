@@ -21,7 +21,7 @@ Page({
 
   handleLogin: function() {
     const { username, password } = this.data;
-    
+
     if (!username || !password) {
       wx.showToast({ title: '请输入账号密码', icon: 'none' });
       return;
@@ -29,21 +29,28 @@ Page({
 
     wx.showLoading({ title: '验证中...' });
 
-    // 模拟登录逻辑
-    // 后续可以配合云函数实现真正的权限控制
-    setTimeout(() => {
+    // 调用云函数验证，密码不暴露在前端
+    wx.cloud.callFunction({
+      name: 'login',
+      data: { username, password }
+    }).then(res => {
       wx.hideLoading();
-      if ((username === 'staff' && password === '123456') || (username === 'admin' && password === 'admin888')) {
+      const result = res.result;
+      if (result.success) {
         wx.setStorageSync('isLogin', true);
-        wx.setStorageSync('username', username);
-        wx.setStorageSync('role', username === 'admin' ? 'admin' : 'staff');
-        
+        wx.setStorageSync('username', result.username);
+        wx.setStorageSync('role', result.role);
+
         wx.reLaunch({
           url: '/pages/index/index'
         });
       } else {
-        wx.showToast({ title: '账号或密码错误', icon: 'none' });
+        wx.showToast({ title: result.msg || '账号或密码错误', icon: 'none' });
       }
-    }, 1000);
+    }).catch(err => {
+      wx.hideLoading();
+      console.error('云函数调用失败', err);
+      wx.showToast({ title: '登录服务异常，请稍后重试', icon: 'none' });
+    });
   }
 });
