@@ -1,0 +1,313 @@
+<view class="container">
+  <!-- 顶部切换导航 -->
+  <view class="tab-header">
+    <view class="tab {{currentTab === 'summary' ? 'active' : ''}}" bindtap="switchTab" data-tab="summary">采购汇总</view>
+    <view class="tab {{currentTab === 'finance' ? 'active' : ''}}" bindtap="switchTab" data-tab="finance">每日记账</view>
+    <view class="tab {{currentTab === 'tools' ? 'active' : ''}}" bindtap="switchTab" data-tab="tools">实用工具</view>
+    <view class="logout-btn" bindtap="logout">退出</view>
+  </view>
+
+  <!-- 日期切换栏 -->
+  <view class="date-selector-bar" wx:if="{{currentTab !== 'tools'}}">
+    <picker mode="date" value="{{selectedDate}}" bindchange="onDateChange">
+      <view class="date-display">
+        <text class="calendar-icon">📅</text>
+        <text class="date-val">{{selectedDate}}</text>
+        <text class="arrow-down">▼</text>
+      </view>
+    </picker>
+    <text class="today-tag" wx:if="{{selectedDate === today}}">今日</text>
+  </view>
+
+  <view class="content-area">
+    <!-- 模块一：采购汇总 -->
+    <view wx:if="{{currentTab === 'summary'}}" class="summary-module">
+      <view class="module-header">
+        <text class="module-title">{{selectedDate === today ? '今日' : selectedDate}} 提报汇总</text>
+        <button class="copy-btn" bindtap="copyToClipboard">复制清单</button>
+      </view>
+      
+      <scroll-view class="list-card" scroll-y>
+        <view wx:for="{{summary}}" wx:key="name" class="list-item">
+          <text class="name">{{item.name}}</text>
+          <text class="total">{{item.total}} {{item.unit}}</text>
+        </view>
+        <view wx:if="{{summary.length === 0}}" class="empty">
+          <text>今日暂无员工提交报备</text>
+        </view>
+      </scroll-view>
+      <text class="refresh-tip">提示：下拉页面可刷新最新数据</text>
+    </view>
+
+    <!-- 模块二：财务记账 -->
+    <view wx:if="{{currentTab === 'finance'}}" class="finance-module">
+      <!-- 顶部统计概览 -->
+      <view class="range-header-card">
+        <view class="rh-info">
+          <text class="rh-label">{{isRangeMode ? '区间汇总' : '单日账目'}}</text>
+          <view class="rh-date" bindtap="openRangePicker">
+            <text>{{displayRangeText}}</text>
+            <text class="arrow-down-inline">▼</text>
+          </view>
+        </view>
+        <view class="rh-stats-wrap">
+          <view class="rh-stat-item">
+            <text class="p-label">总收入</text>
+            <text class="p-val pos">฿ {{totalIncome}}</text>
+          </view>
+          <view class="rh-stat-item">
+            <text class="p-label">总支出</text>
+            <text class="p-val neg">฿ {{cost}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 收入板块 -->
+      <view class="finance-section income-section-card">
+        <view class="section-title">
+          <text class="title-text">💰 收入明细</text>
+          <text class="total-text">总计 ฿ {{totalIncome}}</text>
+        </view>
+        
+        <view class="platform-grid">
+          <view class="platform-item">
+            <image class="p-icon" src="/images/grab.png" mode="aspectFit"></image>
+            <text class="p-name">Grab</text>
+            <input wx:if="{{!isRangeMode}}" class="p-input" type="digit" value="{{grab}}" bindinput="onInput" data-field="grab" />
+            <text wx:else class="p-value">฿ {{grab}}</text>
+          </view>
+          <view class="platform-item">
+            <image class="p-icon" src="/images/lineman.png" mode="aspectFit"></image>
+            <text class="p-name">Lineman</text>
+            <input wx:if="{{!isRangeMode}}" class="p-input" type="digit" value="{{lineman}}" bindinput="onInput" data-field="lineman" />
+            <text wx:else class="p-value">฿ {{lineman}}</text>
+          </view>
+          <view class="platform-item">
+            <image class="p-icon" src="/images/shopee.png" mode="aspectFit"></image>
+            <text class="p-name">Shopee</text>
+            <input wx:if="{{!isRangeMode}}" class="p-input" type="digit" value="{{shopee}}" bindinput="onInput" data-field="shopee" />
+            <text wx:else class="p-value">฿ {{shopee}}</text>
+          </view>
+          <view class="platform-item">
+            <image class="p-icon" src="/images/wukong.png" mode="aspectFit"></image>
+            <text class="p-name">悟空</text>
+            <input wx:if="{{!isRangeMode}}" class="p-input" type="digit" value="{{wukong}}" bindinput="onInput" data-field="wukong" />
+            <text wx:else class="p-value">฿ {{wukong}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 支出板块 -->
+      <view class="finance-section expense-section-card">
+        <view class="section-title">
+          <text class="title-text">💸 支出明细</text>
+          <text class="total-text">总支出 ฿ {{cost}}</text>
+        </view>
+
+        <!-- 多项支出列表 -->
+        <view class="expense-list">
+          <view wx:for="{{expenseList}}" wx:key="index" class="expense-item-row">
+            <view class="exp-main">
+              <view class="exp-left">
+                <input wx:if="{{!isRangeMode}}" class="exp-name-input" placeholder="项目" value="{{item.name}}" bindinput="onExpenseInput" data-index="{{index}}" data-field="name" />
+                <text wx:else class="exp-name-val">{{item.name}}</text>
+                
+                <!-- 支出项收据 -->
+                <view class="exp-receipt">
+                  <view wx:if="{{item.receipt}}" class="receipt-preview mini">
+                    <image src="{{item.receipt}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.receipt}}"></image>
+                    <view wx:if="{{!isRangeMode}}" class="receipt-del" catchtap="deleteReceipt" data-index="{{index}}">×</view>
+                  </view>
+                  <view wx:elif="{{!isRangeMode}}" class="receipt-add mini" bindtap="uploadReceipt" data-index="{{index}}">
+                    <text>📷</text>
+                  </view>
+                </view>
+              </view>
+              
+              <view class="exp-amount-wrap">
+                <text class="unit-small">฿</text>
+                <input wx:if="{{!isRangeMode}}" class="exp-amount-input" type="digit" placeholder="金额" value="{{item.amount}}" bindinput="onExpenseInput" data-index="{{index}}" data-field="amount" />
+                <text wx:else class="exp-amount-val">{{item.amount}}</text>
+              </view>
+            </view>
+            <view wx:if="{{!isRangeMode}}" class="exp-del" bindtap="removeExpenseItem" data-index="{{index}}">×</view>
+          </view>
+        </view>
+
+        <!-- 添加按钮 -->
+        <view wx:if="{{!isRangeMode}}" class="add-exp-btn" bindtap="addExpenseItem">
+          <text class="plus">+</text>
+          <text>增加支出项</text>
+        </view>
+        
+        <!-- 备注字段 -->
+        <view class="remarks-entry">
+          <text class="e-label">其他补充备注</text>
+          <textarea wx:if="{{!isRangeMode}}" class="r-input" placeholder="其他需要说明的事项..." value="{{remarks}}" bindinput="onInput" data-field="remarks" auto-height></textarea>
+          <view wx:else class="r-value">
+            <text wx:if="{{remarks}}">{{remarks}}</text>
+            <text wx:else class="empty-tip">暂无备注</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 操作区域 -->
+      <view class="action-area" wx:if="{{!isRangeMode}}">
+        <button class="save-btn" bindtap="saveFinance">保存今日账单</button>
+      </view>
+      <view class="range-tip" wx:else>
+        <text>当前处于区间统计模式，仅支持查看，不支持修改。</text>
+      </view>
+
+      <!-- 日历区间选择器弹窗 -->
+      <view class="range-picker-mask" wx:if="{{showRangePicker}}" bindtap="closeRangePicker">
+        <view class="range-picker-content" catchtap="prevent">
+          <view class="rp-header">
+            <text class="rp-title">选择日期范围</text>
+            <text class="rp-subtitle">{{rangeStart}} {{rangeEnd ? '- ' + rangeEnd : ''}}</text>
+          </view>
+          
+          <scroll-view class="calendar-scroll" scroll-y>
+            <view class="weekday-row">
+              <text>日</text><text>一</text><text>二</text><text>三</text><text>四</text><text>五</text><text>六</text>
+            </view>
+            <view class="days-container">
+              <block wx:for="{{calendarDays}}" wx:key="fullDate">
+                <view wx:if="{{item.isMonthFirst}}" class="month-title">{{item.monthName}}</view>
+                <view class="day-cell {{item.empty ? 'empty' : ''}} {{item.fullDate === rangeStart || item.fullDate === rangeEnd ? 'selected' : ''}} {{item.fullDate > rangeStart && item.fullDate < rangeEnd ? 'in-range' : ''}}" 
+                      bindtap="onDayClick" data-date="{{item.fullDate}}">
+                  <text>{{item.day}}</text>
+                </view>
+              </block>
+            </view>
+          </scroll-view>
+
+          <view class="rp-footer">
+            <button class="confirm-btn" bindtap="confirmRange">确定选择</button>
+          </view>
+        </view>
+      </view>
+
+      <!-- 历史对账记录 -->
+      <view class="history-section">
+        <text class="section-title">最近账单记录</text>
+        <view class="history-list">
+          <view wx:for="{{recentStats}}" wx:key="date" class="history-item {{selectedDate === item.date ? 'current' : ''}}" bindtap="jumpToDate" data-date="{{item.date}}">
+            <view class="h-left">
+              <text class="h-date">{{item.date === today ? '今日' : item.date}}</text>
+              <text class="h-income">收入 ฿{{item.totalIncome}}</text>
+            </view>
+            <view class="h-right">
+              <text class="h-profit {{item.profit >= 0 ? 'pos' : 'neg'}}">利润 ฿{{item.profit}}</text>
+              <text class="h-arrow">></text>
+            </view>
+          </view>
+          <view wx:if="{{recentStats.length === 0}}" class="stats-empty">暂无历史记录</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 模块三：实用工具 -->
+    <view wx:if="{{currentTab === 'tools'}}" class="tools-module">
+      <!-- 盈利计算器（升级版） -->
+      <view class="tool-card">
+        <view class="tool-header">
+          <view class="title-with-switch">
+            <text class="tool-title">📊 盈利精算</text>
+            <view class="pro-tag {{isDetailed ? 'active' : ''}}" bindtap="toggleDetailed">
+              {{isDetailed ? '专业模式 ON' : '简易模式'}}
+            </view>
+          </view>
+        </view>
+        <view class="tool-form">
+          <view class="tool-input-group">
+            <text class="tool-label">成本 (฿)</text>
+            <view class="input-with-unit">
+              <input class="tool-input flex-input" type="digit" value="{{marginCost}}" placeholder="输入成本" bindinput="toolInput" data-type="margin" data-field="cost" />
+              <picker bindchange="onUnitChange" data-field="cost" value="{{costUnitIndex}}" range="{{units}}">
+                <view class="unit-picker">{{units[costUnitIndex]}} <text class="unit-arrow">▼</text></view>
+              </picker>
+            </view>
+          </view>
+          <view class="tool-input-group">
+            <text class="tool-label">售价 (฿)</text>
+            <view class="input-with-unit">
+              <input class="tool-input flex-input" type="digit" value="{{marginPrice}}" placeholder="输入售价" bindinput="toolInput" data-type="margin" data-field="price" />
+              <picker bindchange="onUnitChange" data-field="price" value="{{priceUnitIndex}}" range="{{units}}">
+                <view class="unit-picker">{{units[priceUnitIndex]}} <text class="unit-arrow">▼</text></view>
+              </picker>
+            </view>
+          </view>
+
+          <!-- 简易模式下的紧凑行 -->
+          <view class="tool-row-flex" wx:if="{{!isDetailed}}">
+            <view class="tool-input-half">
+              <text class="tool-label-small">平台佣金 (%)</text>
+              <input class="tool-input-mini" type="number" value="{{marginPlatformRate}}" bindinput="toolInput" data-type="margin" data-field="rate" />
+            </view>
+            <view class="tool-input-half">
+              <text class="tool-label-small">包装费 (฿)</text>
+              <input class="tool-input-mini" type="digit" value="{{marginPackaging}}" placeholder="0.00" bindinput="toolInput" data-type="margin" data-field="pkg" />
+            </view>
+          </view>
+
+          <!-- 专业模式展开项 -->
+          <view class="detailed-box" wx:if="{{isDetailed}}">
+            <view class="tool-input-group mini-group">
+              <text class="tool-label-small">平台佣金率 (%)</text>
+              <input class="tool-input-mini" style="width:160rpx" type="number" value="{{marginPlatformRate}}" bindinput="toolInput" data-type="margin" data-field="rate" />
+            </view>
+            <view class="vat-row" bindtap="toggleVat">
+              <icon type="{{includeVat ? 'success' : 'circle'}}" size="16" color="#07c160"></icon>
+              <text class="vat-text">包含平台佣金的 7% VAT 税</text>
+            </view>
+            <view class="tool-row-flex">
+              <view class="tool-input-half">
+                <text class="tool-label-small">包装费 (฿)</text>
+                <input class="tool-input-mini" type="digit" value="{{marginPackaging}}" placeholder="0.00" bindinput="toolInput" data-type="margin" data-field="pkg" />
+              </view>
+              <view class="tool-input-half">
+                <text class="tool-label-small">给客人的折扣 (฿)</text>
+                <input class="tool-input-mini" type="digit" value="{{marginDiscount}}" placeholder="0.00" bindinput="toolInput" data-type="margin" data-field="disc" />
+              </view>
+            </view>
+            <view class="tool-input-group mini-group">
+              <text class="tool-label-small">手续费/其他 (฿)</text>
+              <input class="tool-input-mini" style="width:160rpx" type="digit" value="{{marginOtherFee}}" placeholder="0.00" bindinput="toolInput" data-type="margin" data-field="other" />
+            </view>
+          </view>
+
+          <view class="tool-result-box">
+            <view class="result-item">
+              <text>实得净利</text>
+              <text class="result-val-small">฿ {{netProfit}}</text>
+            </view>
+            <view class="result-item main-res">
+              <text>实得净利率</text>
+              <text class="result-val">{{marginResult}}%</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 汇率换算器 -->
+      <view class="tool-card rate-card">
+        <view class="tool-header">
+          <text class="tool-title">💱 汇率换算 (THB/CNY)</text>
+          <view class="rate-info">参考汇率：1元 ≈ {{exchangeRate}}泰铢</view>
+        </view>
+        <view class="tool-form">
+          <view class="tool-input-group">
+            <text class="tool-label">泰铢 (฿)</text>
+            <input class="tool-input" type="digit" value="{{thbVal}}" placeholder="输入泰铢" bindinput="toolInput" data-type="rate" data-field="thb" />
+          </view>
+          <view class="tool-input-group">
+            <text class="tool-label">人民币 (¥)</text>
+            <input class="tool-input" type="digit" value="{{cnyVal}}" placeholder="输入人民币" bindinput="toolInput" data-type="rate" data-field="cny" />
+          </view>
+          <view class="tool-tip">输入任意一方金额自动换算</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

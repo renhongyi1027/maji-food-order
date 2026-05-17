@@ -1,0 +1,997 @@
+.container {
+  padding: 0;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+.tab-header {
+  display: flex;
+  background: #fff;
+  padding: 20rpx 30rpx;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1rpx solid #eee;
+  align-items: center;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 30rpx;
+  color: #666;
+  padding: 20rpx 0;
+  position: relative;
+}
+
+.tab.active {
+  color: #07c160;
+  font-weight: bold;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  right: 30%;
+  height: 6rpx;
+  background: #07c160;
+  border-radius: 3rpx;
+}
+
+.logout-btn {
+  font-size: 26rpx;
+  color: #999;
+  padding: 10rpx 20rpx;
+}
+
+/* 日期切换栏样式 */
+.date-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+  background: #f7f7f7;
+  padding: 12rpx 30rpx;
+  border-radius: 30rpx;
+  border: 1rpx solid #ddd;
+}
+
+.calendar-icon {
+  margin-right: 15rpx;
+  font-size: 32rpx;
+}
+
+.date-val {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 10rpx;
+}
+
+.arrow-down {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.today-tag {
+  margin-left: 20rpx;
+  background: #07c160;
+  color: #fff;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.content-area {
+  padding: 30rpx;
+}
+
+/* 汇总模块 */
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+}
+
+.module-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.copy-btn {
+  font-size: 24rpx;
+  background: #e8f4ec;
+  color: #07c160;
+  padding: 10rpx 25rpx;
+  margin: 0;
+  border-radius: 30rpx;
+}
+
+.list-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 0 30rpx;
+  max-height: 75vh;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.name { font-size: 32rpx; }
+.total { font-size: 32rpx; font-weight: bold; color: #fa5151; }
+
+.refresh-tip {
+  display: block;
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+  margin-top: 30rpx;
+}
+
+/* 记账模块 */
+.stats-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 30rpx;
+  border-left: 8rpx solid #ff9500;
+}
+
+.stats-title {
+  font-size: 26rpx;
+  color: #888;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.stats-scroll {
+  width: 100%;
+}
+
+.stats-list {
+  display: flex;
+  padding-bottom: 10rpx;
+}
+
+.stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 40rpx;
+  min-width: 120rpx;
+}
+
+.stats-date {
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.stats-profit {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.stats-profit.pos { color: #07c160; }
+.stats-profit.neg { color: #fa5151; }
+
+.stats-empty {
+  font-size: 24rpx;
+  color: #ccc;
+  width: 100%;
+  text-align: center;
+  padding: 20rpx 0;
+}
+
+.form-card {
+  background: #fff;
+  padding: 30rpx;
+  border-radius: 20rpx;
+}
+
+.input-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.expense-border {
+  border-bottom: 4rpx solid #f0f0f0;
+  margin-bottom: 20rpx;
+}
+
+.label-with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.platform-icon {
+  width: 44rpx;
+  height: 44rpx;
+  margin-right: 15rpx;
+  border-radius: 8rpx;
+  background-color: #f0f0f0; /* 占位背景色 */
+}
+
+.label { font-size: 28rpx; color: #555; }
+.input { text-align: right; font-size: 32rpx; font-weight: bold; color: #07c160; }
+
+.income-section {
+  background: #fafafa;
+  padding: 0 20rpx;
+  border-radius: 10rpx;
+}
+
+.summary-box {
+  margin-top: 40rpx;
+  padding: 30rpx;
+  background: #fff;
+  border: 2rpx dashed #eee;
+  border-radius: 15rpx;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+  font-size: 28rpx;
+}
+
+.profit-row {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eee;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.profit-val { color: #ff9500; }
+.income-val { color: #07c160; }
+.expense-val { color: #fa5151; }
+
+.save-btn {
+  background: #07c160;
+  color: #fff;
+  border-radius: 50rpx;
+  margin-top: 50rpx;
+  font-weight: bold;
+}
+
+/* 实用工具模块样式 */
+.tool-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+}
+
+.tool-header {
+  margin-bottom: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding-bottom: 20rpx;
+}
+
+.title-with-switch {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pro-tag {
+  font-size: 22rpx;
+  background: #f0f0f0;
+  color: #999;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  transition: all 0.3s;
+}
+
+.pro-tag.active {
+  background: #e8f4ec;
+  color: #07c160;
+  font-weight: bold;
+}
+
+.detailed-box {
+  background: #fafafa;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.mini-group {
+  margin-bottom: 15rpx !important;
+}
+
+.vat-row {
+  display: flex;
+  align-items: center;
+  padding: 10rpx 0 20rpx;
+}
+
+.vat-text {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 10rpx;
+}
+
+.tool-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.rate-info {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.tool-form {
+  padding: 10rpx 0;
+}
+
+.tool-input-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+}
+
+.tool-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.tool-input {
+  background: #f7f7f7;
+  height: 80rpx;
+  width: 300rpx;
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  text-align: right;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  background: #f7f7f7;
+  border-radius: 10rpx;
+  width: 420rpx;
+}
+
+.flex-input {
+  flex: 1;
+  background: transparent !important;
+  width: auto !important;
+}
+
+.unit-picker {
+  padding: 0 20rpx;
+  font-size: 26rpx;
+  color: #07c160;
+  border-left: 1rpx solid #e0e0e0;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.unit-arrow {
+  font-size: 16rpx;
+  margin-left: 6rpx;
+  color: #999;
+}
+
+/* 盈利计算器增强样式 */
+.tool-row-flex {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10rpx;
+  padding: 20rpx 0;
+  border-top: 1rpx dashed #eee;
+}
+
+.tool-input-half {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-input-half:first-child { margin-right: 20rpx; }
+
+.tool-label-small {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.tool-input-mini {
+  background: #f7f7f7;
+  height: 70rpx;
+  border-radius: 8rpx;
+  padding: 0 15rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.tool-result-box {
+  margin-top: 20rpx;
+  padding: 25rpx;
+  background: #f0f9f4;
+  border-radius: 15rpx;
+  border: 2rpx solid #e1f2e8;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.main-res {
+  margin-top: 15rpx;
+  padding-top: 15rpx;
+  border-top: 1rpx solid #d0ebdb;
+  font-weight: bold;
+  color: #07c160;
+  font-size: 30rpx;
+}
+
+.result-val-small {
+  font-weight: bold;
+  color: #333;
+}
+
+.result-val {
+  font-size: 46rpx;
+}
+
+.tool-result {
+  margin-top: 30rpx;
+  padding: 20rpx;
+  background: #e8f4ec;
+  border-radius: 12rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30rpx;
+  color: #07c160;
+  font-weight: bold;
+}
+
+.result-val {
+  font-size: 40rpx;
+}
+
+.tool-tip {
+  font-size: 22rpx;
+  color: #ccc;
+  text-align: center;
+  margin-top: 20rpx;
+}
+
+.rate-card {
+  border-top: 6rpx solid #576b95;
+}
+
+.empty {
+  padding: 100rpx 0;
+  text-align: center;
+  color: #bbb;
+}
+
+/* 财务模块新版样式 */
+.range-header-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.05);
+}
+
+.rh-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.rh-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.rh-date {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.rh-stats-wrap {
+  display: flex;
+  text-align: right;
+}
+
+.rh-stat-item {
+  margin-left: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.p-label {
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 4rpx;
+}
+
+.p-val {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.p-val.pos { color: #07c160; }
+.p-val.neg { color: #fa5151; }
+
+.finance-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03);
+}
+
+.income-section-card {
+  border-top: 10rpx solid #07c160;
+}
+
+.expense-section-card {
+  border-top: 10rpx solid #fa5151;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.title-text {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.total-text {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.platform-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.platform-item {
+  background: #f9f9f9;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.p-icon {
+  width: 50rpx;
+  height: 50rpx;
+  margin-bottom: 10rpx;
+}
+
+.p-name {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.p-input {
+  width: 100%;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #07c160;
+  border-bottom: 1rpx solid #ddd;
+}
+
+.p-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 收据样式 */
+.receipt-area {
+  margin-top: 15rpx;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.receipt-add {
+  width: 60rpx;
+  height: 60rpx;
+  background: #f0f0f0;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx dashed #ccc;
+}
+
+.camera-icon {
+  font-size: 30rpx;
+  color: #999;
+}
+
+.receipt-preview {
+  width: 80rpx;
+  height: 80rpx;
+  position: relative;
+}
+
+.receipt-preview image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+  border: 1rpx solid #eee;
+}
+
+.receipt-del {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  width: 32rpx;
+  height: 32rpx;
+  background: rgba(255, 0, 0, 0.7);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 24rpx;
+  line-height: 28rpx;
+  text-align: center;
+  z-index: 2;
+}
+
+/* 支出列表内的收据 */
+.exp-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.exp-receipt {
+  margin-left: 15rpx;
+}
+
+.receipt-add.mini {
+  width: 44rpx;
+  height: 44rpx;
+  font-size: 24rpx;
+}
+
+.receipt-preview.mini {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.receipt-preview.mini .receipt-del {
+  width: 24rpx;
+  height: 24rpx;
+  font-size: 18rpx;
+  line-height: 22rpx;
+  top: -8rpx;
+  right: -8rpx;
+}
+
+/* 支出列表样式 */
+.expense-list {
+  margin-bottom: 20rpx;
+}
+
+.expense-item-row {
+  display: flex;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.exp-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exp-name-input {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.exp-name-val {
+  font-size: 28rpx;
+  color: #666;
+  flex: 1;
+}
+
+.exp-amount-wrap {
+  display: flex;
+  align-items: baseline;
+  width: 180rpx;
+  justify-content: flex-end;
+}
+
+.unit-small {
+  font-size: 22rpx;
+  color: #999;
+  margin-right: 6rpx;
+}
+
+.exp-amount-input {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #fa5151;
+  text-align: right;
+  width: 140rpx;
+}
+
+.exp-amount-val {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.exp-del {
+  width: 44rpx;
+  height: 44rpx;
+  line-height: 40rpx;
+  text-align: center;
+  color: #ccc;
+  font-size: 40rpx;
+  margin-left: 20rpx;
+}
+
+.add-exp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  border: 2rpx dashed #ddd;
+  border-radius: 12rpx;
+  color: #07c160;
+  font-size: 26rpx;
+  margin-bottom: 30rpx;
+}
+
+.plus {
+  font-size: 34rpx;
+  margin-right: 10rpx;
+  font-weight: bold;
+}
+
+.remarks-entry {
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx dashed #eee;
+}
+
+.r-input {
+  width: 100%;
+  min-height: 120rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  color: #333;
+}
+
+.r-value {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  background: #f9f9f9;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  white-space: pre-wrap;
+}
+
+.empty-tip {
+  color: #ccc;
+  font-style: italic;
+}
+
+.action-area {
+  padding: 20rpx 0 60rpx;
+}
+
+.range-tip {
+  text-align: center;
+  font-size: 24rpx;
+  color: #ff9500;
+  padding: 40rpx;
+  background: #fff9f0;
+  border-radius: 12rpx;
+  margin-bottom: 60rpx;
+}
+
+/* 日历区间选择器样式 */
+.range-picker-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.range-picker-content {
+  background: #fff;
+  border-radius: 30rpx 30rpx 0 0;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.rp-header {
+  padding: 30rpx 40rpx;
+  border-bottom: 1rpx solid #eee;
+  flex-shrink: 0;
+  z-index: 100;
+  background: #fff;
+}
+
+.rp-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  display: block;
+}
+
+.rp-subtitle {
+  font-size: 24rpx;
+  color: #07c160;
+  margin-top: 8rpx;
+  display: block;
+}
+
+.calendar-scroll {
+  flex: 1;
+  padding: 0 20rpx 180rpx;
+  height: 0;
+}
+
+.weekday-row {
+  display: flex;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f9f9f9;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.weekday-row text {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.days-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx 0;
+}
+
+.month-title {
+  width: 100%;
+  padding: 30rpx 10rpx 20rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.day-cell {
+  width: 14.28%;
+  height: 90rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.day-cell.selected {
+  background: #07c160;
+  color: #fff;
+  border-radius: 12rpx;
+}
+
+.day-cell.in-range {
+  background: #e8f4ec;
+}
+
+.day-cell.empty {
+  visibility: hidden;
+}
+
+.rp-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30rpx 40rpx;
+  background: #fff;
+  border-top: 1rpx solid #eee;
+  padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
+  z-index: 1000;
+}
+
+.confirm-btn {
+  background: #07c160 !important;
+  color: #fff !important;
+  border-radius: 50rpx;
+  font-weight: bold;
+  height: 90rpx;
+  line-height: 90rpx;
+  width: 100% !important;
+  font-size: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.2);
+}
+
+.h-arrow {
+  color: #ccc;
+  font-size: 24rpx;
+}

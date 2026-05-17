@@ -1,0 +1,119 @@
+.login-container {
+  padding: 60rpx;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: url('/images/login-bg.jpg'); /* 默认指向本地图片路径 */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+/* 添加一个半透明蒙层，防止背景图太花导致文字看不清 */
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.7); /* 调整透明度，让背景更隐约可见 */
+  z-index: 1;
+}
+
+.logo-area, .form-area {
+  position: relative;
+  z-index: 2; /* 确保内容在遮罩层之上 */
+}
+
+.logo-area {
+  margin-top: 100rpx;
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  background: #07c160;
+  border-radius: 40rpx;
+  margin-bottom: 20rpx;
+}
+
+.shop-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  display: block;
+  color: #333;
+}
+
+.welcome {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.form-area {
+  margin-top: 40rpx;
+}
+
+.input-group {
+  margin-bottom: 40rpx;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 15rpx;
+  display: block;
+}
+
+.input {
+  background: #f7f7f7;
+  height: 90rpx;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  font-size: 30rpx;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  flex: 1;
+  padding-right: 100rpx;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.eye-icon {
+  font-size: 36rpx;
+  color: #666;
+}
+
+.login-btn {
+  background: #07c160;
+  color: #fff;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-radius: 50rpx;
+  font-weight: bold;
+  margin-top: 60rpx;
+}
+
+.tip {
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+  margin-top: 30rpx;
+}

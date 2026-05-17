@@ -1,0 +1,9 @@
+# macOS 系统文件
+.DS_Store
+
+# 微信小程序：个人配置文件（含开发者自己的设置，不同电脑不一样）
+project.private.config.json
+
+# 依赖包（如以后用到 npm）
+node_modules/
+miniprogram_npm/

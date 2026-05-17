@@ -1,0 +1,55 @@
+<view class="container">
+  <view class="header">
+    <view class="header-top">
+      <text class="title">麻吉麻辣线上采购单</text>
+      <text class="logout" bindtap="logout">退出登录</text>
+    </view>
+    <text class="subtitle">明日食材采购报备</text>
+  </view>
+
+  <!-- 今日提报状态卡片 -->
+  <view class="today-status-card" wx:if="{{myTodayOrder}}">
+    <view class="status-header" bindtap="toggleHistory">
+      <view class="status-left">
+        <icon type="success" size="18" color="#07c160"></icon>
+        <text class="status-text">今日已提报</text>
+      </view>
+      <text class="toggle-link">{{showHistory ? '收起详情' : '点击查看详情'}}</text>
+    </view>
+    <view class="history-list" wx:if="{{showHistory}}">
+      <view wx:for="{{myTodayOrder.items}}" wx:key="name" class="history-item">
+        <text>{{item.name}}</text>
+        <text>{{item.count}}{{item.unit}}</text>
+      </view>
+      <view class="submit-time">提交时间：{{myTodayOrder.date}}</view>
+    </view>
+  </view>
+
+  <scroll-view class="ingredient-list" scroll-y>
+    <block wx:for="{{categories}}" wx:key="name" wx:for-index="catIdx">
+      <view class="category-header" bindtap="toggleCategory" data-idx="{{catIdx}}">
+        <text class="category-title">{{item.name}}</text>
+        <text class="arrow {{item.isOpen ? 'up' : 'down'}}">{{item.isOpen ? '▲' : '▼'}}</text>
+      </view>
+      
+      <view class="item-wrapper" wx:if="{{item.isOpen}}">
+        <view wx:for="{{item.items}}" wx:key="name" wx:for-index="itemIdx" class="item">
+          <view class="info">
+            <text class="name">{{item.name}}</text>
+            <text class="unit">/{{item.unit}}</text>
+          </view>
+          <view class="counter">
+            <button class="btn" bindtap="decrease" data-catidx="{{catIdx}}" data-itemidx="{{itemIdx}}">-</button>
+            <input class="num-input" type="number" value="{{item.count}}" bindinput="onInput" data-catidx="{{catIdx}}" data-itemidx="{{itemIdx}}" />
+            <button class="btn" bindtap="increase" data-catidx="{{catIdx}}" data-itemidx="{{itemIdx}}">+</button>
+          </view>
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+
+  <view class="footer">
+    <button class="submit-btn" bindtap="submitOrder">一键提交报备</button>
+    <button class="admin-link" bindtap="goToAdmin">管理端汇总 (限管理员) ></button>
+  </view>
+</view>

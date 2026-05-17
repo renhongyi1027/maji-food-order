@@ -1,0 +1,26 @@
+<view class="login-container">
+  <view class="logo-area">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="shop-name">麻吉麻辣素坤逸101店</text>
+    <text class="welcome">食材采购管理系统</text>
+  </view>
+
+  <view class="form-area">
+    <view class="input-group">
+      <text class="label">账号</text>
+      <input class="input" placeholder="请输入员工账号" bindinput="onUsernameInput" />
+    </view>
+    <view class="input-group">
+      <text class="label">密码</text>
+      <view class="password-input-wrapper">
+        <input class="input password-input" password="{{!showPassword}}" placeholder="请输入密码" bindinput="onPasswordInput" value="{{password}}" />
+        <view class="password-toggle" bindtap="toggleShowPassword" wx:if="{{password}}">
+          <text class="eye-icon">{{showPassword ? '🙈' : '👁️'}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <button class="login-btn" bindtap="handleLogin">登录系统</button>
+    <view class="tip">初次登录请联系店主获取账号</view>
+  </view>
+</view>
