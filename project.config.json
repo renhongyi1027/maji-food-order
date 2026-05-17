@@ -31,7 +31,7 @@
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
+  "libVersion": "3.15.2",
   "appid": "wxf9f8d30027bcc4f6",
   "projectname": "grocery-helper",
   "cloudfunctionRoot": "cloudfunctions/",

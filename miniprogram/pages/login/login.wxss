@@ -3,24 +3,15 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url('/images/login-bg.jpg'); /* 默认指向本地图片路径 */
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #e8f4ec 0%, #f7f7f7 100%);
   position: relative;
 }
 
-/* 添加一个半透明蒙层，防止背景图太花导致文字看不清 */
-.login-container::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255, 255, 255, 0.7); /* 调整透明度，让背景更隐约可见 */
+/* 移除了背景图片和蒙层——微信小程序不支持 WXSS 本地背景图 */
+.login-container .logo-area,
+.login-container .form-area {
+  position: relative;
   z-index: 1;
-}
-
-.logo-area, .form-area {
-  position: relative;
-  z-index: 2; /* 确保内容在遮罩层之上 */
 }
 
 .logo-area {
@@ -29,12 +20,18 @@
   margin-bottom: 80rpx;
 }
 
-.logo {
+.logo-text {
   width: 160rpx;
   height: 160rpx;
   background: #07c160;
   border-radius: 40rpx;
-  margin-bottom: 20rpx;
+  margin: 0 auto 20rpx;
+  color: #fff;
+  font-size: 72rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .shop-name {

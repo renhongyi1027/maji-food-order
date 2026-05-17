@@ -1,6 +1,6 @@
 <view class="login-container">
   <view class="logo-area">
-    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <view class="logo-text">麻</view>
     <text class="shop-name">麻吉麻辣素坤逸101店</text>
     <text class="welcome">食材采购管理系统</text>
   </view>
