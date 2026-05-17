@@ -148,13 +148,14 @@ Page({
   // 新增：按区间加载并汇总财务数据
   loadFinanceByRange: function(start, end) {
     wx.showLoading({ title: '汇总中...' });
-    const db = wx.cloud.database();
-    const _ = db.command;
     
-    return db.collection('finance').where({
-      date: _.gte(start).and(_.lte(end))
-    }).get().then(res => {
-      if (res.data.length === 0) {
+    // 通过云函数查询（有管理员权限）
+    return wx.cloud.callFunction({
+      name: 'getFinance',
+      data: { start, end }
+    }).then(res => {
+      const resData = res.result.data;
+      if (resData.length === 0) {
         this.setData({
           cost: '', grab: '', lineman: '', shopee: '', wukong: '', totalIncome: 0, profit: 0,
           expenseList: [{ name: '', amount: '' }], remarks: ''
@@ -163,8 +164,8 @@ Page({
       }
 
       // 如果是单日，直接显示
-      if (start === end && res.data.length === 1) {
-        const d = res.data[0];
+      if (start === end && resData.length === 1) {
+        const d = resData[0];
         this.setData({
           cost: d.cost, grab: d.grab, lineman: d.lineman, shopee: d.shopee, wukong: d.wukong,
           remarks: d.remarks || '',
@@ -176,7 +177,7 @@ Page({
         let tRemarks = [];
         let combinedExpenses = [];
 
-        res.data.forEach(d => {
+        resData.forEach(d => {
           tCost += parseFloat(d.cost) || 0;
           tGrab += parseFloat(d.grab) || 0;
           tLineman += parseFloat(d.lineman) || 0;
@@ -237,20 +238,18 @@ Page({
   },
 
   fetchRecentStats: function() {
-    const db = wx.cloud.database();
-    const _ = db.command;
     const now = new Date();
-    const days = [];
-    for(let i=0; i<7; i++) {
-      const d = new Date(now);
-      d.setDate(now.getDate() - i);
-      days.push(`${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`);
-    }
+    const startDate = new Date(now);
+    startDate.setDate(now.getDate() - 7);
+    const start = `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;
+    const end = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
 
-    return db.collection('finance').where({
-      date: _.in(days)
-    }).orderBy('date', 'desc').get().then(res => {
-      this.setData({ recentStats: res.data });
+    // 通过云函数查询（有管理员权限）
+    return wx.cloud.callFunction({
+      name: 'getFinance',
+      data: { start, end }
+    }).then(res => {
+      this.setData({ recentStats: res.result.data });
     });
   },
 
@@ -273,21 +272,12 @@ Page({
   },
 
   fetchSummary: function() {
-    const db = wx.cloud.database();
-    return db.collection('orders').where({
-      date: this.data.selectedDate
-    }).get().then(res => {
-      const summaryMap = {};
-      res.data.forEach(order => {
-        order.items.forEach(item => {
-          if (summaryMap[item.name]) {
-            summaryMap[item.name].total += item.count;
-          } else {
-            summaryMap[item.name] = { name: item.name, total: item.count, unit: item.unit };
-          }
-        });
-      });
-      this.setData({ summary: Object.values(summaryMap) });
+    // 通过云函数查询（云函数有管理员权限，可跨用户读取）
+    return wx.cloud.callFunction({
+      name: 'getOrdersSummary',
+      data: { date: this.data.selectedDate }
+    }).then(res => {
+      this.setData({ summary: res.result.data });
     });
   },
 
@@ -437,14 +427,17 @@ Page({
   },
 
   loadFinanceByDate: function() {
-    const db = wx.cloud.database();
+    // 通过云函数查询（有管理员权限）
     this.setData({
       cost: '', grab: '', lineman: '', shopee: '', wukong: '', totalIncome: 0, profit: 0, remarks: '',
       expenseList: [{ name: '', amount: '', receipt: '' }]
     });
-    return db.collection('finance').where({ date: this.data.selectedDate }).get().then(res => {
-      if (res.data.length > 0) {
-        const d = res.data[0];
+    return wx.cloud.callFunction({
+      name: 'getFinance',
+      data: { start: this.data.selectedDate, end: this.data.selectedDate }
+    }).then(res => {
+      if (res.result.data.length > 0) {
+        const d = res.result.data[0];
         this.setData({
           cost: d.cost, grab: d.grab, lineman: d.lineman, shopee: d.shopee, wukong: d.wukong,
           remarks: d.remarks || '',
@@ -537,27 +530,22 @@ Page({
 
   saveFinance: function() {
     wx.showLoading({ title: '保存中...' });
-    const db = wx.cloud.database();
-    const { 
+    const {
       cost, grab, lineman, shopee, wukong, selectedDate, totalIncome, profit, remarks, expenseList
     } = this.data;
-    
-    db.collection('finance').where({ date: selectedDate }).get().then(res => {
-      const financeData = {
-        date: selectedDate, cost, grab, lineman, shopee, wukong, totalIncome, profit, remarks, expenseList,
-        updateTime: db.serverDate()
-      };
-      if (res.data.length > 0) {
-        return db.collection('finance').doc(res.data[0]._id).update({ data: financeData });
-      } else {
-        return db.collection('finance').add({ data: financeData });
+
+    // 通过云函数保存（有管理员权限）
+    wx.cloud.callFunction({
+      name: 'saveFinance',
+      data: {
+        date: selectedDate, cost, grab, lineman, shopee, wukong, totalIncome, profit, remarks, expenseList
       }
     }).then(() => {
       wx.hideLoading();
       wx.showToast({ title: '账单已保存' });
     }).catch(err => {
       wx.hideLoading();
-      wx.showModal({ title: '保存失败', content: '请确保已创建 finance 集合且权限为“所有用户可读写”' });
+      wx.showModal({ title: '保存失败', content: '请检查云函数是否已部署' });
     });
   },
 
