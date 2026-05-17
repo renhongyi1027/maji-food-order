@@ -294,7 +294,12 @@
       <view class="tool-card rate-card">
         <view class="tool-header">
           <text class="tool-title">💱 汇率换算 (THB/CNY)</text>
-          <view class="rate-info">参考汇率：1元 ≈ {{exchangeRate}}泰铢</view>
+          <view class="rate-info">
+            当前汇率：1元 ≈
+            <input class="rate-input-inline" type="digit" value="{{exchangeRate}}" bindinput="toolInput" data-type="rate" data-field="rateVal" />
+            泰铢
+            <button class="rate-save-btn" bindtap="saveExchangeRate" size="mini">保存汇率</button>
+          </view>
         </view>
         <view class="tool-form">
           <view class="tool-input-group">

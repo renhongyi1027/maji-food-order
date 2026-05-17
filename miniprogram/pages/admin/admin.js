@@ -45,7 +45,7 @@ Page({
   onLoad: function() {
     const now = new Date();
     const dateStr = this.formatDate(now);
-    this.setData({ 
+    this.setData({
       today: dateStr,
       selectedDate: dateStr,
       rangeStart: dateStr,
@@ -54,6 +54,35 @@ Page({
     });
     this.initCalendar();
     this.refreshAll();
+    this.loadSettings();
+  },
+
+  // 从云端加载系统设置（汇率等）
+  loadSettings: function() {
+    wx.cloud.callFunction({
+      name: 'getSettings'
+    }).then(res => {
+      if (res.result.success) {
+        this.setData({ exchangeRate: res.result.data.value });
+      }
+    }).catch(() => {
+      // 加载失败则使用默认汇率 4.95
+    });
+  },
+
+  // 保存汇率到云端
+  saveExchangeRate: function() {
+    wx.showLoading({ title: '保存中...' });
+    wx.cloud.callFunction({
+      name: 'updateSettings',
+      data: { key: 'exchangeRate', value: this.data.exchangeRate }
+    }).then(() => {
+      wx.hideLoading();
+      wx.showToast({ title: '汇率已保存', icon: 'success' });
+    }).catch(() => {
+      wx.hideLoading();
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    });
   },
 
   formatDate: function(date) {
@@ -463,13 +492,17 @@ Page({
       
       this.setData({ [fieldName]: val }, () => this.calculateMargin());
     } else if (type === 'rate') {
-      const rate = this.data.exchangeRate;
       if (field === 'thb') {
+        const rate = this.data.exchangeRate;
         const cny = val === '' ? '' : (parseFloat(val) / rate).toFixed(2);
         this.setData({ thbVal: val, cnyVal: cny });
-      } else {
+      } else if (field === 'cny') {
+        const rate = this.data.exchangeRate;
         const thb = val === '' ? '' : (parseFloat(val) * rate).toFixed(2);
         this.setData({ cnyVal: val, thbVal: thb });
+      } else if (field === 'rateVal') {
+        // 用户直接修改汇率
+        this.setData({ exchangeRate: parseFloat(val) || 0 });
       }
     }
   },
